@@ -1,0 +1,6 @@
+framework module Pods_SteppingStones {
+  umbrella header "Pods-SteppingStones-umbrella.h"
+
+  export *
+  module * { export * }
+}
