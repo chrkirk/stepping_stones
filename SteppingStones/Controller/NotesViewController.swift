@@ -1,6 +1,6 @@
 import UIKit
 
-class NotesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+class NotesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, InputViewDelegate {
 
     let cellID = "cellID"
     
@@ -8,11 +8,11 @@ class NotesViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     let tableView = UITableView(frame: .zero)
     
-    // the inputTextField appears and sticks on top of the keyboard when the add button gets pressed
+    // the inputNoteView appears and sticks on top of the keyboard when the add button gets pressed
     // that is why we need a variable to change its bottomAchor when that happens
-    let inputTextField = UITextField(frame: .zero)
+    let inputNoteView = InputView()
     
-    var inputTextFieldBottomAnchor: NSLayoutConstraint!
+    var inputNoteViewBottomAnchor: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,7 +24,7 @@ class NotesViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.separatorStyle = .none
         tableView.register(NoteCell.self, forCellReuseIdentifier: cellID)
         
-        inputTextField.delegate = self
+        inputNoteView.delegate = self
         
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(toggleEditingMode(_:)))
@@ -44,18 +44,16 @@ class NotesViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         
-        view.addSubview(inputTextField)
-        inputTextField.translatesAutoresizingMaskIntoConstraints = false
-        inputTextField.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        inputTextField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8).isActive = true
-        inputTextField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8).isActive = true
-        inputTextFieldBottomAnchor = inputTextField.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        inputTextFieldBottomAnchor.isActive = true
+        view.addSubview(inputNoteView)
+        inputNoteView.translatesAutoresizingMaskIntoConstraints = false
+        inputNoteView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        inputNoteView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8).isActive = true
+        inputNoteView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8).isActive = true
+        inputNoteViewBottomAnchor = inputNoteView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        inputNoteViewBottomAnchor.isActive = true
         
-        inputTextField.placeholder = "Enter a new note ..."
-        inputTextField.borderStyle = .roundedRect
-        inputTextField.backgroundColor = .white
-        inputTextField.isHidden = true
+        inputNoteView.backgroundColor = .white
+        inputNoteView.isHidden = true
     }
     
     @objc private func toggleEditingMode(_ sender: UIBarButtonItem) {
@@ -81,10 +79,12 @@ class NotesViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @objc private func toggleKeyboard() {
-        if inputTextField.isEditing {
-            hideKeyboard()
+        if inputNoteView.isFirstResponder {
+            // hide keyboard and input view
+            if inputNoteView.resignFirstResponder() { inputNoteView.isHidden = true }
         } else {
-            showKeyBoard()
+            // show keyboard and input view
+            if inputNoteView.becomeFirstResponder() { inputNoteView.isHidden = false }
         }
     }
     
@@ -105,32 +105,22 @@ class NotesViewController: UIViewController, UITableViewDelegate, UITableViewDat
         let keyboardAnimationCurve = UIView.AnimationOptions(rawValue: info[UIResponder.keyboardAnimationCurveUserInfoKey] as! UInt)
         
         if notification.name == UIResponder.keyboardWillShowNotification {
-            inputTextFieldBottomAnchor.isActive = false
-            inputTextFieldBottomAnchor = inputTextField.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -keyboardHeight)
-            inputTextFieldBottomAnchor.isActive = true
+            inputNoteViewBottomAnchor.isActive = false
+            inputNoteViewBottomAnchor = inputNoteView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -keyboardHeight)
+            inputNoteViewBottomAnchor.isActive = true
             
             UIView.animate(withDuration: keyboardAnimationDuration, delay: 0, options: keyboardAnimationCurve, animations: {
                 self.view.layoutIfNeeded()
             }, completion: nil)
         } else {
-            inputTextFieldBottomAnchor.isActive = false
-            inputTextFieldBottomAnchor = inputTextField.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-            inputTextFieldBottomAnchor.isActive = true
+            inputNoteViewBottomAnchor.isActive = false
+            inputNoteViewBottomAnchor = inputNoteView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            inputNoteViewBottomAnchor.isActive = true
             
             UIView.animate(withDuration: keyboardAnimationDuration, delay: 0, options: keyboardAnimationCurve, animations: {
                 self.view.layoutIfNeeded()
             }, completion: nil)
         }
-    }
-    
-    @objc private func showKeyBoard() {
-        inputTextField.becomeFirstResponder()
-        inputTextField.isHidden = false
-    }
-    
-    @objc private func hideKeyboard() {
-        inputTextField.resignFirstResponder()
-        inputTextField.isHidden = true
     }
     
     // MARK: - UITableViewDataSource
@@ -157,22 +147,18 @@ class NotesViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-    // MARK: - UITextFieldDelegate
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let text = textField.text, !text.isEmpty {
-            
-            // Add new note
-            let newNote = noteStore.createNote(withText: text)
-            if let index = noteStore.allNotes.firstIndex(of: newNote) {
-                let indexPath = IndexPath(row: index, section: 0)
-                tableView.insertRows(at: [indexPath], with: .automatic)
-                tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-            }
-            textField.text = ""
-            toggleKeyboard()
-            return true
+    // MARK: - InputViewDelegate
+    func didPressSubmit() {
+        guard let text = inputNoteView.textView.text, !inputNoteView.textView.text.isEmpty else { return }
+        
+        // Add new note
+        let newNote = noteStore.createNote(withText: text)
+        if let index = noteStore.allNotes.firstIndex(of: newNote) {
+            let indexPath = IndexPath(row: index, section: 0)
+            tableView.insertRows(at: [indexPath], with: .automatic)
+            tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
+        inputNoteView.setText("")
         toggleKeyboard()
-        return false
     }
 }
