@@ -12,9 +12,10 @@
 		386465D4226A5F3700C6A834 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386465D3226A5F3700C6A834 /* AppDelegate.swift */; };
 		386465DB226A5F3900C6A834 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 386465DA226A5F3900C6A834 /* Assets.xcassets */; };
 		386465DE226A5F3900C6A834 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 386465DC226A5F3900C6A834 /* LaunchScreen.storyboard */; };
-		386465E8226A60C300C6A834 /* NoteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386465E7226A60C300C6A834 /* NoteStore.swift */; };
 		38B82405226D155700601656 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B82404226D155700601656 /* Note.swift */; };
 		38F37CDE22996BDB0009FC10 /* InputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F37CDD22996BDB0009FC10 /* InputView.swift */; };
+		38F37CE4229992ED0009FC10 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F37CE3229992ED0009FC10 /* RealmManager.swift */; };
+		38F37CE82299C1080009FC10 /* NotesViewController+UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F37CE72299C1080009FC10 /* NotesViewController+UITableView.swift */; };
 		F8647178516B7691A41F8E7D /* Pods_SteppingStones.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01F9AA46D42D1DA477E242EA /* Pods_SteppingStones.framework */; };
 /* End PBXBuildFile section */
 
@@ -27,9 +28,10 @@
 		386465DA226A5F3900C6A834 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		386465DD226A5F3900C6A834 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		386465DF226A5F3900C6A834 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		386465E7226A60C300C6A834 /* NoteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteStore.swift; sourceTree = "<group>"; };
 		38B82404226D155700601656 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		38F37CDD22996BDB0009FC10 /* InputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputView.swift; sourceTree = "<group>"; };
+		38F37CE3229992ED0009FC10 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
+		38F37CE72299C1080009FC10 /* NotesViewController+UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotesViewController+UITableView.swift"; sourceTree = "<group>"; };
 		743041A0025EFEA255FF6057 /* Pods-SteppingStones.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SteppingStones.release.xcconfig"; path = "Target Support Files/Pods-SteppingStones/Pods-SteppingStones.release.xcconfig"; sourceTree = "<group>"; };
 		DF42CE40324888820E4B1D0D /* Pods-SteppingStones.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SteppingStones.debug.xcconfig"; path = "Target Support Files/Pods-SteppingStones/Pods-SteppingStones.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,7 +60,6 @@
 		3852EB32226D1F4300E47578 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				386465E7226A60C300C6A834 /* NoteStore.swift */,
 				38B82404226D155700601656 /* Note.swift */,
 			);
 			path = Model;
@@ -77,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				3852EB30226D1C5100E47578 /* NotesViewController.swift */,
+				38F37CE72299C1080009FC10 /* NotesViewController+UITableView.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -111,6 +113,7 @@
 		386465D2226A5F3700C6A834 /* SteppingStones */ = {
 			isa = PBXGroup;
 			children = (
+				38F37CE2229992BE0009FC10 /* Realm Database */,
 				386465DF226A5F3900C6A834 /* Info.plist */,
 				386465D3226A5F3700C6A834 /* AppDelegate.swift */,
 				3852EB32226D1F4300E47578 /* Model */,
@@ -119,6 +122,14 @@
 				3852EB35226D1F7E00E47578 /* Supporting files */,
 			);
 			path = SteppingStones;
+			sourceTree = "<group>";
+		};
+		38F37CE2229992BE0009FC10 /* Realm Database */ = {
+			isa = PBXGroup;
+			children = (
+				38F37CE3229992ED0009FC10 /* RealmManager.swift */,
+			);
+			path = "Realm Database";
 			sourceTree = "<group>";
 		};
 		671557CF7AA2C29089D3FDA8 /* Frameworks */ = {
@@ -254,7 +265,8 @@
 				386465D4226A5F3700C6A834 /* AppDelegate.swift in Sources */,
 				3852EB31226D1C5100E47578 /* NotesViewController.swift in Sources */,
 				38F37CDE22996BDB0009FC10 /* InputView.swift in Sources */,
-				386465E8226A60C300C6A834 /* NoteStore.swift in Sources */,
+				38F37CE82299C1080009FC10 /* NotesViewController+UITableView.swift in Sources */,
+				38F37CE4229992ED0009FC10 /* RealmManager.swift in Sources */,
 				381DE307226D196600DAD079 /* NoteCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

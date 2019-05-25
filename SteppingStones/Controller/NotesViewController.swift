@@ -1,10 +1,12 @@
 import UIKit
 
-class NotesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, InputViewDelegate {
+class NotesViewController: UIViewController, InputViewDelegate {
+    
+    var realm: RealmManager!
+    
+    var notes = [Note]()
 
     let cellID = "cellID"
-    
-    var noteStore: NoteStore!
     
     let tableView = UITableView(frame: .zero)
     
@@ -32,6 +34,9 @@ class NotesViewController: UIViewController, UITableViewDelegate, UITableViewDat
         
         registerForKeyboardNotifications()
         setupViews()
+        
+        // initialize the table content by fetching everything from the database
+        notes = realm.fetchAllNotes()
     }
     
     private func setupViews() {
@@ -47,8 +52,8 @@ class NotesViewController: UIViewController, UITableViewDelegate, UITableViewDat
         view.addSubview(inputNoteView)
         inputNoteView.translatesAutoresizingMaskIntoConstraints = false
         inputNoteView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        inputNoteView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 8).isActive = true
-        inputNoteView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -8).isActive = true
+        inputNoteView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        inputNoteView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         inputNoteViewBottomAnchor = inputNoteView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         inputNoteViewBottomAnchor.isActive = true
         
@@ -123,41 +128,17 @@ class NotesViewController: UIViewController, UITableViewDelegate, UITableViewDat
         }
     }
     
-    // MARK: - UITableViewDataSource
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return noteStore.allNotes.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as! NoteCell
-        let note = noteStore.allNotes[indexPath.row]
-        cell.noteLabel.text = note.text
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        noteStore.moveNote(from: sourceIndexPath.row, to: destinationIndexPath.row)
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            let note = noteStore.allNotes[indexPath.row]
-            self.noteStore.removeNote(note)
-            self.tableView.deleteRows(at: [indexPath], with: .automatic)
-        }
-    }
-    
     // MARK: - InputViewDelegate
     func didPressSubmit() {
         guard let text = inputNoteView.textView.text, !inputNoteView.textView.text.isEmpty else { return }
         
-        // Add new note
-        let newNote = noteStore.createNote(withText: text)
-        if let index = noteStore.allNotes.firstIndex(of: newNote) {
-            let indexPath = IndexPath(row: index, section: 0)
+        if let newNote = realm.createNote(text: text) {
+            notes = realm.fetchAllNotes()
+            let indexPath = IndexPath(row: newNote.index, section: 0)
             tableView.insertRows(at: [indexPath], with: .automatic)
             tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
         }
+        
         inputNoteView.setText("")
         toggleKeyboard()
     }
