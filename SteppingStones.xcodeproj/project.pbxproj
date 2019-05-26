@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		381DE307226D196600DAD079 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381DE306226D196600DAD079 /* NoteCell.swift */; };
 		38332E44229AA1B300796430 /* NoteCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 38332E43229AA1B300796430 /* NoteCell.xib */; };
+		38332E46229AA8C600796430 /* InputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 38332E45229AA8C600796430 /* InputView.xib */; };
 		3852EB31226D1C5100E47578 /* NotesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3852EB30226D1C5100E47578 /* NotesViewController.swift */; };
 		386465D4226A5F3700C6A834 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386465D3226A5F3700C6A834 /* AppDelegate.swift */; };
 		386465DB226A5F3900C6A834 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 386465DA226A5F3900C6A834 /* Assets.xcassets */; };
@@ -24,6 +25,7 @@
 		01F9AA46D42D1DA477E242EA /* Pods_SteppingStones.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SteppingStones.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		381DE306226D196600DAD079 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		38332E43229AA1B300796430 /* NoteCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NoteCell.xib; sourceTree = "<group>"; };
+		38332E45229AA8C600796430 /* InputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InputView.xib; sourceTree = "<group>"; };
 		3852EB30226D1C5100E47578 /* NotesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesViewController.swift; sourceTree = "<group>"; };
 		386465D0226A5F3700C6A834 /* SteppingStones.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SteppingStones.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		386465D3226A5F3700C6A834 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				381DE306226D196600DAD079 /* NoteCell.swift */,
 				38332E43229AA1B300796430 /* NoteCell.xib */,
 				38F37CDD22996BDB0009FC10 /* InputView.swift */,
+				38332E45229AA8C600796430 /* InputView.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				386465DE226A5F3900C6A834 /* LaunchScreen.storyboard in Resources */,
+				38332E46229AA8C600796430 /* InputView.xib in Resources */,
 				386465DB226A5F3900C6A834 /* Assets.xcassets in Resources */,
 				38332E44229AA1B300796430 /* NoteCell.xib in Resources */,
 			);

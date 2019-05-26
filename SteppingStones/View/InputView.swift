@@ -11,57 +11,23 @@ class InputView: UIView, UITextViewDelegate {
     
     let buttonWidth: CGFloat = 64
     
-    let submitButton: UIButton = {
-        let btn = UIButton(type: .system)
-        btn.setTitle("Submit", for: .normal)
-        return btn
-    }()
+    @IBOutlet weak var submitButton: UIButton!
+    @IBOutlet weak var submitButtonWidthConstraint: NSLayoutConstraint!
     
-    var submitButtonWidthConstaint: NSLayoutConstraint?
+    @IBOutlet weak var updateButton: UIButton!
+    @IBOutlet weak var updateButtonWidthConstraint: NSLayoutConstraint!
     
-    let updateButton: UIButton = {
-        let btn = UIButton(type: .system)
-        btn.setTitle("Update", for: .normal)
-        return btn
-    }()
+    @IBOutlet weak var textView: UITextView!
     
-    var updateButtonWidthConstaint: NSLayoutConstraint?
-    
-    let textView: UITextView = {
-        let tv = UITextView()
-        tv.font = UIFont.preferredFont(forTextStyle: .body)
-        tv.isScrollEnabled = false
-        tv.backgroundColor = UIColor(red: 1, green: 245/255, blue: 245/255, alpha: 1)
-        return tv
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: .zero)
-        textView.delegate = self
-        submitButton.addTarget(self, action: #selector(handleSubmit), for: .touchUpInside)
-        updateButton.addTarget(self, action: #selector(handleUpdate), for: .touchUpInside)
-
-        let stackView = UIStackView(arrangedSubviews: [textView, submitButton, updateButton])
-        
-        addSubview(stackView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        stackView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        stackView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        
-        submitButtonWidthConstaint = submitButton.widthAnchor.constraint(equalToConstant: buttonWidth)
-        submitButtonWidthConstaint?.isActive = true
-        
-        updateButtonWidthConstaint = updateButton.widthAnchor.constraint(equalToConstant: buttonWidth)
-        updateButtonWidthConstaint?.isActive = true
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
     
-    @objc private func handleSubmit() {
+    @IBAction func handleSubmit() {
         delegate?.didPressSubmit()
     }
     
-    @objc private func handleUpdate() {
+    @IBAction func handleUpdate() {
         delegate?.didPressUpdate()
     }
     
@@ -71,23 +37,23 @@ class InputView: UIView, UITextViewDelegate {
     }
     
     func showOnlySubmitButton() {
-        submitButtonWidthConstaint?.isActive = false
-        submitButtonWidthConstaint = submitButton.widthAnchor.constraint(equalToConstant: buttonWidth)
-        submitButtonWidthConstaint?.isActive = true
+        submitButtonWidthConstraint.isActive = false
+        submitButtonWidthConstraint = submitButton.widthAnchor.constraint(equalToConstant: buttonWidth)
+        submitButtonWidthConstraint.isActive = true
         
-        updateButtonWidthConstaint?.isActive = false
-        updateButtonWidthConstaint = updateButton.widthAnchor.constraint(equalToConstant: 0)
-        updateButtonWidthConstaint?.isActive = true
+        updateButtonWidthConstraint.isActive = false
+        updateButtonWidthConstraint = updateButton.widthAnchor.constraint(equalToConstant: 0)
+        updateButtonWidthConstraint.isActive = true
     }
     
     func showOnlyUpdateButton() {
-        submitButtonWidthConstaint?.isActive = false
-        submitButtonWidthConstaint = submitButton.widthAnchor.constraint(equalToConstant: 0)
-        submitButtonWidthConstaint?.isActive = true
+        submitButtonWidthConstraint.isActive = false
+        submitButtonWidthConstraint = submitButton.widthAnchor.constraint(equalToConstant: 0)
+        submitButtonWidthConstraint.isActive = true
         
-        updateButtonWidthConstaint?.isActive = false
-        updateButtonWidthConstaint = updateButton.widthAnchor.constraint(equalToConstant: buttonWidth)
-        updateButtonWidthConstaint?.isActive = true
+        updateButtonWidthConstraint.isActive = false
+        updateButtonWidthConstraint = updateButton.widthAnchor.constraint(equalToConstant: buttonWidth)
+        updateButtonWidthConstraint.isActive = true
     }
     
     // MARK: - Handle first responder
@@ -117,9 +83,5 @@ class InputView: UIView, UITextViewDelegate {
                 constraint.constant = estimatedSize.height
             }
         }
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

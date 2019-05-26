@@ -14,7 +14,7 @@ class NotesViewController: UIViewController, InputViewDelegate {
     
     // the inputNoteView appears and sticks on top of the keyboard when the add button gets pressed
     // that is why we need a variable to change its bottomAchor when that happens
-    let inputNoteView = InputView()
+    var inputNoteView: InputView!
     
     var inputNoteViewBottomAnchor: NSLayoutConstraint!
     
@@ -29,6 +29,7 @@ class NotesViewController: UIViewController, InputViewDelegate {
         
         tableView.register(UINib(nibName: "NoteCell", bundle: nil), forCellReuseIdentifier: cellID)
         
+        inputNoteView = Bundle.main.loadNibNamed("InputView", owner: self, options: nil)?.first as? InputView
         inputNoteView.delegate = self
         inputNoteView.showOnlySubmitButton()
         
@@ -61,7 +62,6 @@ class NotesViewController: UIViewController, InputViewDelegate {
         inputNoteViewBottomAnchor = inputNoteView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         inputNoteViewBottomAnchor.isActive = true
         
-        inputNoteView.backgroundColor = .white
         inputNoteView.isHidden = true
     }
     
