@@ -1,8 +1,15 @@
-import Foundation
-import RealmSwift
+//
+//  Note.swift
+//  SteppingStones
+//
+//  Created by Christos Kirkos on 26/05/2019.
+//  Copyright © 2019 chrkirk. All rights reserved.
+//
 
-class Note: Object {
-    @objc dynamic var text: String = ""
-    @objc dynamic var dateCreated: Date = Date()
-    @objc dynamic var index: Int = 0
+import Foundation
+
+struct Note {
+    var text: String = ""
+    var dateCreate: Date = Date()
+    var index: Int = 0
 }

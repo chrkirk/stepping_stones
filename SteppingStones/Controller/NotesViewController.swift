@@ -21,6 +21,7 @@ class NotesViewController: UIViewController, InputViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor(white: 0.95, alpha: 1)
         title = "Notes"
         
         tableView = Bundle.main.loadNibNamed("NotesTableView", owner: self, options: nil)?.first as? NotesTableView
@@ -40,7 +41,12 @@ class NotesViewController: UIViewController, InputViewDelegate {
         setupViews()
         
         // initialize the table content by fetching everything from the database
-        notes = realmManager.fetchAllNotes()
+        realmManager.fetchAllNotes { savedNotes in
+            self.notes = savedNotes
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
     }
     
     private func setupViews() {
@@ -134,11 +140,19 @@ class NotesViewController: UIViewController, InputViewDelegate {
     func didPressSubmit() {
         guard let text = inputNoteView.textView.text, !text.isEmpty else { return }
         
-        if let newNote = realmManager.createNote(text: text) {
-            notes = realmManager.fetchAllNotes()
+        realmManager.createNote(text: text) { (newNote, err) in
+            if let _ = err { return }
+            
+            guard let newNote = newNote else { return }
             let indexPath = IndexPath(row: newNote.index, section: 0)
-            tableView.insertRows(at: [indexPath], with: .automatic)
-            tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            
+            self.realmManager.fetchAllNotes { savedNotes in
+                self.notes = savedNotes
+                DispatchQueue.main.async {
+                    self.tableView.insertRows(at: [indexPath], with: .automatic)
+                    self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                }
+            }
         }
         
         inputNoteView.setText("")
@@ -148,12 +162,20 @@ class NotesViewController: UIViewController, InputViewDelegate {
     func didPressUpdate() {
         guard let text = inputNoteView.textView.text, !text.isEmpty else { return }
         if let note = noteCurrentlyBeingEdited {
-            realmManager.updateNote(note, withText: text)
-            
-            let indexPath = IndexPath(row: note.index, section: 0)
-            tableView.beginUpdates()
-            tableView.reloadRows(at: [indexPath], with: .middle)
-            tableView.endUpdates()
+            realmManager.updateNote(note, withText: text) { (updatedNote, err) in
+                if let _ = err { return }
+                
+                guard let updatedNote = updatedNote else { return }
+                let indexPath = IndexPath(row: updatedNote.index, section: 0)
+                
+                self.notes[indexPath.row] = updatedNote
+                
+                DispatchQueue.main.async {
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [indexPath], with: .middle)
+                    self.tableView.endUpdates()
+                }
+            }
         }
         
         noteCurrentlyBeingEdited = nil
