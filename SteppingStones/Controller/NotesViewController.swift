@@ -11,7 +11,7 @@ class NotesViewController: UIViewController, InputViewDelegate {
 
     let cellID = "cellID"
     
-    var tableView: UITableView!
+    let tableView = UITableView()
     
     // the inputNoteView appears and sticks on top of the keyboard when the add button gets pressed
     // that is why we need a variable to change its bottomAchor when that happens
@@ -24,9 +24,10 @@ class NotesViewController: UIViewController, InputViewDelegate {
         view.backgroundColor = UIColor(white: 0.95, alpha: 1)
         title = "Notes"
         
-        tableView = Bundle.main.loadNibNamed("NotesTableView", owner: self, options: nil)?.first as? NotesTableView
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = UIColor(white: 0.95, alpha: 1)
         tableView.register(UINib(nibName: "NoteCell", bundle: nil), forCellReuseIdentifier: cellID)
         
         inputNoteView = Bundle.main.loadNibNamed("InputView", owner: self, options: nil)?.first as? InputView
