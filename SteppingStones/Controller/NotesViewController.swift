@@ -10,7 +10,7 @@ class NotesViewController: UIViewController, InputViewDelegate {
 
     let cellID = "cellID"
     
-    let tableView = UITableView(frame: .zero)
+    var tableView: UITableView!
     
     // the inputNoteView appears and sticks on top of the keyboard when the add button gets pressed
     // that is why we need a variable to change its bottomAchor when that happens
@@ -21,12 +21,10 @@ class NotesViewController: UIViewController, InputViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Notes"
-        view.backgroundColor = .white
         
+        tableView = Bundle.main.loadNibNamed("NotesTableView", owner: self, options: nil)?.first as? NotesTableView
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.separatorStyle = .none
-        
         tableView.register(UINib(nibName: "NoteCell", bundle: nil), forCellReuseIdentifier: cellID)
         
         inputNoteView = Bundle.main.loadNibNamed("InputView", owner: self, options: nil)?.first as? InputView
@@ -45,14 +43,7 @@ class NotesViewController: UIViewController, InputViewDelegate {
     }
     
     private func setupViews() {
-        tableView.backgroundColor = UIColor(white: 0.95, alpha: 1)
-        
         view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         
         view.addSubview(inputNoteView)
         inputNoteView.translatesAutoresizingMaskIntoConstraints = false
@@ -61,7 +52,6 @@ class NotesViewController: UIViewController, InputViewDelegate {
         inputNoteView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         inputNoteViewBottomAnchor = inputNoteView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         inputNoteViewBottomAnchor.isActive = true
-        
         inputNoteView.isHidden = true
     }
     
