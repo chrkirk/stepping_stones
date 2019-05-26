@@ -47,7 +47,7 @@
                 <constraints>
                     <constraint firstItem="JUN-xj-0Bk" firstAttribute="leading" secondItem="kkN-7l-jey" secondAttribute="leading" constant="16" id="1uK-Bg-1za"/>
                     <constraint firstAttribute="trailing" secondItem="JUN-xj-0Bk" secondAttribute="trailing" constant="16" id="Hpb-l6-8h4"/>
-                    <constraint firstAttribute="bottom" secondItem="JUN-xj-0Bk" secondAttribute="bottom" constant="8" id="Mw4-cx-isC"/>
+                    <constraint firstAttribute="bottom" secondItem="JUN-xj-0Bk" secondAttribute="bottom" priority="750" constant="8" id="Mw4-cx-isC"/>
                     <constraint firstItem="JUN-xj-0Bk" firstAttribute="top" secondItem="kkN-7l-jey" secondAttribute="top" constant="8" id="woh-GN-hxB"/>
                 </constraints>
             </tableViewCellContentView>

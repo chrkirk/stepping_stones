@@ -8,7 +8,7 @@ class NoteCell: UITableViewCell {
     
     @IBInspectable var cornerRadius: CGFloat = 0 {
         didSet {
-            noteBackgroundView.layer.cornerRadius = 10
+            noteBackgroundView.layer.cornerRadius = cornerRadius
         }
     }
 }
