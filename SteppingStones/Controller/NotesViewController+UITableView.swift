@@ -21,6 +21,7 @@ extension NotesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         realmManager.moveNote(from: sourceIndexPath.row, to: destinationIndexPath.row) { err in
             if let _ = err { return }
+            self.realmManager.fetchAllNotes { self.notes = $0  }
         }
     }
     
