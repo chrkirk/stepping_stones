@@ -26,7 +26,8 @@ class NotesViewController: UIViewController, InputViewDelegate {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
-        tableView.register(NoteCell.self, forCellReuseIdentifier: cellID)
+        
+        tableView.register(UINib(nibName: "NoteCell", bundle: nil), forCellReuseIdentifier: cellID)
         
         inputNoteView.delegate = self
         inputNoteView.showOnlySubmitButton()
