@@ -45,15 +45,22 @@ class NotesViewController: UIViewController, InputViewDelegate {
     
     private func setupViews() {
         view.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         
         view.addSubview(inputNoteView)
         inputNoteView.translatesAutoresizingMaskIntoConstraints = false
-        inputNoteView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         inputNoteView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         inputNoteView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
         inputNoteViewBottomAnchor = inputNoteView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         inputNoteViewBottomAnchor.isActive = true
         inputNoteView.isHidden = true
+        
+        // initialize the input view with the right height
+        inputNoteView.textViewDidChange(inputNoteView.textView)
     }
     
     @objc private func toggleEditingMode() {
