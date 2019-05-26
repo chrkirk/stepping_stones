@@ -11,7 +11,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
                 
         let rootViewController = NotesViewController()
-        rootViewController.realm = realmManager
+        rootViewController.realmManager = realmManager
         self.window?.rootViewController = UINavigationController(rootViewController: rootViewController)
         
         self.window?.makeKeyAndVisible()

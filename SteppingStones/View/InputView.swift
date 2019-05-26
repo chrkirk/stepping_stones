@@ -1,27 +1,31 @@
-//
-//  InputView.swift
-//  SteppingStones
-//
-//  Created by Christos Kirkos on 25/05/2019.
-//  Copyright © 2019 chrkirk. All rights reserved.
-//
-
 import UIKit
 
 protocol InputViewDelegate {
     func didPressSubmit()
+    func didPressUpdate()
 }
 
 class InputView: UIView, UITextViewDelegate {
     
     var delegate: InputViewDelegate?
     
+    let buttonWidth: CGFloat = 64
+    
     let submitButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle("Submit", for: .normal)
-        btn.widthAnchor.constraint(equalToConstant: 64).isActive = true
         return btn
     }()
+    
+    var submitButtonWidthConstaint: NSLayoutConstraint?
+    
+    let updateButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle("Update", for: .normal)
+        return btn
+    }()
+    
+    var updateButtonWidthConstaint: NSLayoutConstraint?
     
     let textView: UITextView = {
         let tv = UITextView()
@@ -35,8 +39,9 @@ class InputView: UIView, UITextViewDelegate {
         super.init(frame: .zero)
         textView.delegate = self
         submitButton.addTarget(self, action: #selector(handleSubmit), for: .touchUpInside)
+        updateButton.addTarget(self, action: #selector(handleUpdate), for: .touchUpInside)
 
-        let stackView = UIStackView(arrangedSubviews: [textView, submitButton])
+        let stackView = UIStackView(arrangedSubviews: [textView, submitButton, updateButton])
         
         addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -44,15 +49,45 @@ class InputView: UIView, UITextViewDelegate {
         stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         stackView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         stackView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        
+        submitButtonWidthConstaint = submitButton.widthAnchor.constraint(equalToConstant: buttonWidth)
+        submitButtonWidthConstaint?.isActive = true
+        
+        updateButtonWidthConstaint = updateButton.widthAnchor.constraint(equalToConstant: buttonWidth)
+        updateButtonWidthConstaint?.isActive = true
     }
     
     @objc private func handleSubmit() {
         delegate?.didPressSubmit()
     }
     
+    @objc private func handleUpdate() {
+        delegate?.didPressUpdate()
+    }
+    
     func setText(_ text: String) {
         textView.text = text
         textViewDidChange(textView)
+    }
+    
+    func showOnlySubmitButton() {
+        submitButtonWidthConstaint?.isActive = false
+        submitButtonWidthConstaint = submitButton.widthAnchor.constraint(equalToConstant: buttonWidth)
+        submitButtonWidthConstaint?.isActive = true
+        
+        updateButtonWidthConstaint?.isActive = false
+        updateButtonWidthConstaint = updateButton.widthAnchor.constraint(equalToConstant: 0)
+        updateButtonWidthConstaint?.isActive = true
+    }
+    
+    func showOnlyUpdateButton() {
+        submitButtonWidthConstaint?.isActive = false
+        submitButtonWidthConstaint = submitButton.widthAnchor.constraint(equalToConstant: 0)
+        submitButtonWidthConstaint?.isActive = true
+        
+        updateButtonWidthConstaint?.isActive = false
+        updateButtonWidthConstaint = updateButton.widthAnchor.constraint(equalToConstant: buttonWidth)
+        updateButtonWidthConstaint?.isActive = true
     }
     
     // MARK: - Handle first responder

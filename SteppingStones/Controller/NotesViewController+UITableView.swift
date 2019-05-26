@@ -1,16 +1,8 @@
-//
-//  NotesViewController+UITableView.swift
-//  SteppingStones
-//
-//  Created by Christos Kirkos on 25/05/2019.
-//  Copyright © 2019 chrkirk. All rights reserved.
-//
-
 import UIKit
 
 extension NotesViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return notes.count
+        return notes.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -20,15 +12,33 @@ extension NotesViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let editAction = UITableViewRowAction(style: .normal, title: "Edit", handler: handleCellEditing(rowAction:indexPath:))
+        let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete", handler: handleCellDeletion(rowAction:indexPath:))
+        return [deleteAction, editAction]
+    }
+    
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        realm.moveNote(from: sourceIndexPath.row, to: destinationIndexPath.row)
+        realmManager.moveNote(from: sourceIndexPath.row, to: destinationIndexPath.row)
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            realm.deleteNote(notes[indexPath.row])
-            notes = realm.fetchAllNotes()
-            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            
         }
+    }
+    
+    private func handleCellDeletion(rowAction: UITableViewRowAction, indexPath: IndexPath) -> Void {
+        realmManager.deleteNote(notes[indexPath.row])
+        notes = realmManager.fetchAllNotes()
+        self.tableView.deleteRows(at: [indexPath], with: .automatic)
+    }
+    
+    private func handleCellEditing(rowAction: UITableViewRowAction, indexPath: IndexPath) -> Void {
+        let note = notes[indexPath.row]
+        noteCurrentlyBeingEdited = note
+        inputNoteView.setText(note.text)
+        inputNoteView.showOnlyUpdateButton()
+        if inputNoteView.becomeFirstResponder() { inputNoteView.isHidden = false }
     }
 }

@@ -2,9 +2,11 @@ import UIKit
 
 class NotesViewController: UIViewController, InputViewDelegate {
     
-    var realm: RealmManager!
+    var realmManager: RealmManager!
     
     var notes = [Note]()
+    
+    var noteCurrentlyBeingEdited: Note?
 
     let cellID = "cellID"
     
@@ -27,16 +29,17 @@ class NotesViewController: UIViewController, InputViewDelegate {
         tableView.register(NoteCell.self, forCellReuseIdentifier: cellID)
         
         inputNoteView.delegate = self
+        inputNoteView.showOnlySubmitButton()
         
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(toggleEditingMode(_:)))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(toggleEditingMode))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(toggleKeyboard))
         
         registerForKeyboardNotifications()
         setupViews()
         
         // initialize the table content by fetching everything from the database
-        notes = realm.fetchAllNotes()
+        notes = realmManager.fetchAllNotes()
     }
     
     private func setupViews() {
@@ -61,7 +64,7 @@ class NotesViewController: UIViewController, InputViewDelegate {
         inputNoteView.isHidden = true
     }
     
-    @objc private func toggleEditingMode(_ sender: UIBarButtonItem) {
+    @objc private func toggleEditingMode() {
         if tableView.isEditing {
             tableView.setEditing(false, animated: true)
             view.layoutIfNeeded()
@@ -130,10 +133,10 @@ class NotesViewController: UIViewController, InputViewDelegate {
     
     // MARK: - InputViewDelegate
     func didPressSubmit() {
-        guard let text = inputNoteView.textView.text, !inputNoteView.textView.text.isEmpty else { return }
+        guard let text = inputNoteView.textView.text, !text.isEmpty else { return }
         
-        if let newNote = realm.createNote(text: text) {
-            notes = realm.fetchAllNotes()
+        if let newNote = realmManager.createNote(text: text) {
+            notes = realmManager.fetchAllNotes()
             let indexPath = IndexPath(row: newNote.index, section: 0)
             tableView.insertRows(at: [indexPath], with: .automatic)
             tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
@@ -141,5 +144,21 @@ class NotesViewController: UIViewController, InputViewDelegate {
         
         inputNoteView.setText("")
         toggleKeyboard()
+    }
+    
+    func didPressUpdate() {
+        guard let text = inputNoteView.textView.text, !text.isEmpty else { return }
+        if let note = noteCurrentlyBeingEdited {
+            realmManager.updateNote(note, withText: text)
+            
+            let indexPath = IndexPath(row: note.index, section: 0)
+            tableView.beginUpdates()
+            tableView.reloadRows(at: [indexPath], with: .middle)
+            tableView.endUpdates()
+        }
+        
+        noteCurrentlyBeingEdited = nil
+        toggleKeyboard()
+        inputNoteView.showOnlySubmitButton()
     }
 }
