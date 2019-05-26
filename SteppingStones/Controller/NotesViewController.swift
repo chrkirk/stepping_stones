@@ -6,6 +6,7 @@ class NotesViewController: UIViewController, InputViewDelegate {
     
     var notes = [Note]()
     
+    // used for updating a note in the database after it has been edited
     var noteCurrentlyBeingEdited: Note?
 
     let cellID = "cellID"
